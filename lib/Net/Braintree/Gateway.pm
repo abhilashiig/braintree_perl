@@ -14,6 +14,7 @@ use Net::Braintree::TransactionGateway;
 use Net::Braintree::TransparentRedirectGateway;
 use Net::Braintree::WebhookNotificationGateway;
 use Net::Braintree::WebhookTestingGateway;
+use Net::Braintree::GraphQLGateway;
 
 use Moose;
 
@@ -87,6 +88,11 @@ has 'webhook_notification' => (is => 'ro', lazy => 1, default => sub {
 has 'webhook_testing' => (is => 'ro', lazy => 1, default => sub {
   my $self = shift;
   Net::Braintree::WebhookTestingGateway->new(gateway => $self);
+});
+
+has 'graphql' => (is => 'ro', lazy => 1, default => sub {
+  my $self = shift;
+  Net::Braintree::GraphQLGateway->new(gateway => $self, config => $self->config);
 });
 
 sub http {

@@ -11,12 +11,26 @@ has 'gateway' => (is => 'ro');
 sub create {
   my ($self, $params) = @_;
   confess "ArgumentError" unless verify_params($params, customer_signature);
+  
+  # Use GraphQL if enabled
+  if ($self->gateway->config->use_graphql) {
+    return $self->gateway->graphql->create_customer($params);
+  }
+  
+  # Fallback to REST API
   $self->_make_request("/customers/", 'post', { customer => $params });
 }
 
 sub find {
   my ($self, $id) = @_;
   confess "NotFoundError" unless validate_id($id);
+  
+  # Use GraphQL if enabled
+  if ($self->gateway->config->use_graphql) {
+    return $self->gateway->graphql->find_customer($id)->customer;
+  }
+  
+  # Fallback to REST API
   $self->_make_request("/customers/$id", 'get', undef)->customer;
 }
 

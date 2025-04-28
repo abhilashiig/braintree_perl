@@ -2,7 +2,7 @@ use inc::Module::Install;
 
 name     'Net-Braintree';
 all_from 'lib/Net/Braintree.pm';
-author   q{Braintree, a division of PayPal, Inc. <support@getbraintree.com>};
+author   q{Community Maintained Fork <fork@example.com>};
 license  'perl';
 abstract       'This library provides an API for integration with the Braintree Payment Gateway';
 
@@ -26,7 +26,9 @@ requires       'Moose';
 requires       'Mozilla::CA';
 requires       'URI::Query';
 requires       'XML::Simple';
-requires       'JSON';
+requires       'JSON'        => '2.90';
+requires       'HTTP::Request';
+requires       'Carp';
 test_requires  'Test::More'  => '0.98';
 test_requires  'Try::Tiny';
 test_requires  'Test::Warn';

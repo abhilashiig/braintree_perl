@@ -8,6 +8,8 @@ has partner_id => (is => 'rw');
 has public_key  => (is => 'rw');
 has private_key => (is => 'rw');
 has gateway => (is  => 'ro', lazy => 1, default => sub { Net::Braintree::Gateway->new({config => shift})});
+has use_graphql => (is => 'rw', default => 1);
+has graphql_version => (is => 'rw', default => '2023-01-01');
 
 has environment => (
   is => 'rw',
@@ -57,6 +59,14 @@ sub server {
   return "qa-master.braintreegateway.com" if $self->environment eq 'qa';
 }
 
+sub graphql_server {
+  my $self = shift;
+  return "payments.sandbox.braintree-api.com" if $self->environment eq 'sandbox';
+  return "payments.braintree-api.com" if $self->environment eq 'production';
+  # For development/testing environments, fallback to sandbox
+  return "payments.sandbox.braintree-api.com";
+}
+
 sub auth_url {
   my $self = shift;
   return "http://auth.venmo.dev:9292" if $self->environment eq 'integration';
@@ -78,6 +88,11 @@ sub protocol {
 
 sub api_version {
   return "4";
+}
+
+sub graphql_endpoint {
+  my $self = shift;
+  return $self->protocol . "://" . $self->graphql_server . '/graphql';
 }
 
 1;

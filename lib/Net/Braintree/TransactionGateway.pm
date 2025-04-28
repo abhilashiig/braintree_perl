@@ -10,12 +10,26 @@ has 'gateway' => (is => 'ro');
 sub create {
   my ($self, $params) = @_;
   confess "ArgumentError" unless verify_params($params, transaction_signature);
+  
+  # Use GraphQL if enabled
+  if ($self->gateway->config->use_graphql) {
+    return $self->gateway->graphql->create_transaction($params);
+  }
+  
+  # Fallback to REST API
   $self->_make_request("/transactions/", "post", {transaction => $params});
 }
 
 sub find {
   my ($self, $id) = @_;
   confess "NotFoundError" unless validate_id($id);
+  
+  # Use GraphQL if enabled
+  if ($self->gateway->config->use_graphql) {
+    return $self->gateway->graphql->find_transaction($id);
+  }
+  
+  # Fallback to REST API
   $self->_make_request("/transactions/$id", "get", undef);
 }
 
@@ -37,11 +51,25 @@ sub submit_for_settlement {
 
 sub void {
   my ($self, $id) = @_;
+  
+  # Use GraphQL if enabled
+  if ($self->gateway->config->use_graphql) {
+    return $self->gateway->graphql->void_transaction($id);
+  }
+  
+  # Fallback to REST API
   $self->_make_request("/transactions/$id/void", "put", undef);
 }
 
 sub refund {
   my ($self, $id, $params) = @_;
+  
+  # Use GraphQL if enabled
+  if ($self->gateway->config->use_graphql) {
+    return $self->gateway->graphql->refund_transaction($id, $params);
+  }
+  
+  # Fallback to REST API
   $self->_make_request("/transactions/$id/refund", "post", {transaction => $params});
 }
 

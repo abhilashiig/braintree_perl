@@ -29,25 +29,28 @@ use Net::Braintree::TransparentRedirect;
 use Net::Braintree::WebhookNotification;
 use Net::Braintree::WebhookTesting;
 use Net::Braintree::Configuration;
+use Net::Braintree::GraphQL;
+use Net::Braintree::GraphQLGateway;
 
 =head1 NAME
 
-Net::Braintree - A Client Library for wrapping the Braintree Payment Services Gateway API
+Net::Braintree - A Client Library for wrapping the Braintree Payment Services Gateway API with GraphQL support
 
 =head1 VERSION
 
-Version 0.30.0
+Version 1.0.0
 
-=head1 DEPRECATED
+=head1 NOTICE
 
-This library is deprecated; current integrations are supported, but no new feature development is planned at this time.
-For more details see: L<https://support.braintreepayments.com/customer/portal/articles/1763061-status-of-the-perl-client-library>
+This is a community-maintained fork of the original Braintree Perl SDK with added GraphQL API support.
+This is NOT an official Braintree SDK and is not maintained by Braintree or PayPal.
 
-You can find a community supported fork of this library at: L<https://metacpan.org/pod/WebService::Braintree>
+The original Braintree Perl SDK is deprecated. This fork adds support for the new GraphQL APIs
+while maintaining backward compatibility with existing code.
 
 =cut
 
-our $VERSION = '0.30.0';
+our $VERSION = '1.0.0';
 
 my $configuration_instance = Net::Braintree::Configuration->new;
 

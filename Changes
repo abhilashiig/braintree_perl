@@ -1,4 +1,12 @@
 Revision history for Net-Braintree
+1.0.0   04/28/25
+        Community fork with GraphQL API support
+        Add GraphQL client implementation
+        Add GraphQL gateway for transactions, customers, and payment methods
+        Maintain backward compatibility with REST API
+        Update configuration to support GraphQL endpoints
+        Rename package to indicate it's no longer an official Braintree SDK
+
 0.30.0  04/10/17
         Export Net::Braintree::ClientToken (thanks @msjohns1!)
         Note community fork in documentation

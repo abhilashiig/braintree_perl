@@ -6,6 +6,13 @@ has 'gateway' => (is => 'ro');
 
 sub create {
   my ($self, $params) = @_;
+  
+  # Use GraphQL if enabled
+  if ($self->gateway->config->use_graphql) {
+    return $self->gateway->graphql->create_payment_method($params);
+  }
+  
+  # Fallback to REST API
   $self->_make_request("/payment_methods", 'post', {payment_method => $params});
 }
 
@@ -24,7 +31,14 @@ sub find {
   if (!defined($token) || Net::Braintree::Util::trim($token) eq "") {
     confess "NotFoundError";
   }
-
+  
+  # Use GraphQL if enabled
+  if ($self->gateway->config->use_graphql) {
+    my $response = $self->gateway->graphql->find_payment_method($token);
+    return $response->payment_method;
+  }
+  
+  # Fallback to REST API
   my $response = $self->_make_request("/payment_methods/any/" . $token, 'get');
   return $response->payment_method;
 }
