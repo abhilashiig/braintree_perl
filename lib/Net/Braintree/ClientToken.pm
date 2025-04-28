@@ -8,7 +8,7 @@ sub generate {
     $params->{version} = DEFAULT_VERSION;
   }
 
-  $class->gateway->client_token->generate($params);
+  $class->gateway->graphql->generate_client_token($params);
 }
 
 sub gateway {

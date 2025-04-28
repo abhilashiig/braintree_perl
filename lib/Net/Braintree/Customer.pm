@@ -36,32 +36,35 @@ sub payment_methods {
 
 sub create {
   my ($class, $params) = @_;
-  $class->gateway->customer->create($params);
+  $class->gateway->graphql->create_customer($params);
 }
 
 sub find {
   my($class, $id) = @_;
-  $class->gateway->customer->find($id);
+  $class->gateway->graphql->find_customer($id);
 }
 
 sub delete {
   my ($class, $id) = @_;
-  $class->gateway->customer->delete($id);
+  $class->gateway->graphql->delete_customer($id);
 }
 
 sub update {
   my ($class, $id, $params) = @_;
-  $class->gateway->customer->update($id, $params);
+  $class->gateway->graphql->update_customer($id, $params);
 }
 
 sub search {
   my ($class, $block) = @_;
-  $class->gateway->customer->search($block);
+  # GraphQL doesn't support the same search mechanism
+  # Use the search criteria to construct a GraphQL query
+  my $search_params = $block->(Net::Braintree::CustomerSearch->new)->to_hash;
+  $class->gateway->graphql->search_customers($search_params);
 }
 
 sub all {
   my ($class) = @_;
-  $class->gateway->customer->all;
+  $class->gateway->graphql->get_all_customers();
 }
 
 sub gateway {

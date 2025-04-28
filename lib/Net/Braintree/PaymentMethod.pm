@@ -6,22 +6,22 @@ has token => ( is => 'rw' );
 
 sub create {
   my ($class, $params) = @_;
-  $class->gateway->payment_method->create($params);
+  $class->gateway->graphql->create_payment_method($params);
 }
 
 sub update {
   my ($class, $token, $params) = @_;
-  $class->gateway->payment_method->update($token, $params);
+  $class->gateway->graphql->update_payment_method($token, $params);
 }
 
 sub delete {
   my ($class, $token) = @_;
-  $class->gateway->payment_method->delete($token);
+  $class->gateway->graphql->delete_payment_method($token);
 }
 
 sub find {
   my ($class, $token) = @_;
-  $class->gateway->payment_method->find($token);
+  $class->gateway->graphql->find_payment_method($token);
 }
 
 sub gateway {

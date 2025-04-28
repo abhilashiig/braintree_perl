@@ -41,60 +41,63 @@ sub submit_for_settlement {
   my ($class, $id, $amount) = @_;
   my $params = {};
   $params->{'amount'} = $amount if $amount;
-  $class->gateway->transaction->submit_for_settlement($id, $params);
+  $class->gateway->graphql->submit_for_settlement($id, $params);
 }
 
 sub void {
   my ($class, $id) = @_;
-  $class->gateway->transaction->void($id);
+  $class->gateway->graphql->void_transaction($id);
 }
 
 sub refund {
   my ($class, $id, $amount) = @_;
   my $params = {};
   $params->{'amount'} = $amount if $amount;
-  $class->gateway->transaction->refund($id, $params);
+  $class->gateway->graphql->refund_transaction($id, $params);
 }
 
 sub create {
   my ($class, $params, $type) = @_;
   $params->{'type'} = $type;
-  $class->gateway->transaction->create($params);
+  $class->gateway->graphql->create_transaction($params);
 }
 
 sub find {
   my ($class, $id) = @_;
-  $class->gateway->transaction->find($id);
+  $class->gateway->graphql->find_transaction($id);
 }
 
 sub search {
   my ($class, $block) = @_;
-  $class->gateway->transaction->search($block);
+  # GraphQL doesn't support the same search mechanism
+  # Use the search criteria to construct a GraphQL query
+  my $search_params = $block->(Net::Braintree::TransactionSearch->new)->to_hash;
+  $class->gateway->graphql->search_transactions($search_params);
 }
 
 sub hold_in_escrow {
   my ($class, $id) = @_;
-  $class->gateway->transaction->hold_in_escrow($id);
+  $class->gateway->graphql->hold_transaction_in_escrow($id);
 }
 
 sub release_from_escrow {
   my ($class, $id) = @_;
-  $class->gateway->transaction->release_from_escrow($id);
+  $class->gateway->graphql->release_transaction_from_escrow($id);
 }
 
 sub cancel_release {
   my ($class, $id) = @_;
-  $class->gateway->transaction->cancel_release($id);
+  $class->gateway->graphql->cancel_transaction_release($id);
 }
 
 sub all {
   my $class = shift;
-  $class->gateway->transaction->all;
+  $class->gateway->graphql->get_all_transactions();
 }
 
 sub clone_transaction {
   my ($class, $id, $params) = @_;
-  $class->gateway->transaction->clone_transaction($id, $params);
+  $class->gateway->graphql->clone_transaction($id, $params);
 }
 
 sub gateway {

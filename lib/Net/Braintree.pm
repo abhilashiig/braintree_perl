@@ -34,23 +34,23 @@ use Net::Braintree::GraphQLGateway;
 
 =head1 NAME
 
-Net::Braintree - A Client Library for wrapping the Braintree Payment Services Gateway API with GraphQL support
+Net::Braintree - A modern GraphQL-only client library for the Braintree Payment Services Gateway API
 
 =head1 VERSION
 
-Version 1.0.0
+Version 2.0.0
 
 =head1 NOTICE
 
-This is a community-maintained fork of the original Braintree Perl SDK with added GraphQL API support.
+This is a community-maintained fork of the original Braintree Perl SDK that has been completely rewritten to use only the modern GraphQL APIs.
 This is NOT an official Braintree SDK and is not maintained by Braintree or PayPal.
 
-The original Braintree Perl SDK is deprecated. This fork adds support for the new GraphQL APIs
-while maintaining backward compatibility with existing code.
+The legacy REST APIs have been completely removed from this version. This SDK uses exclusively the modern GraphQL APIs
+for all operations, providing better performance, more detailed responses, and access to the latest Braintree features.
 
 =cut
 
-our $VERSION = '1.0.0';
+our $VERSION = '2.0.0';
 
 my $configuration_instance = Net::Braintree::Configuration->new;
 

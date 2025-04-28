@@ -25,27 +25,27 @@ sub BUILD {
 
 sub create {
   my ($class, $params) = @_;
-  $class->gateway->credit_card->create($params);
+  $class->gateway->graphql->create_credit_card($params);
 }
 
 sub delete {
   my ($class, $token) = @_;
-  $class->gateway->credit_card->delete($token);
+  $class->gateway->graphql->delete_payment_method($token);
 }
 
 sub update {
   my($class, $token, $params) = @_;
-  $class->gateway->credit_card->update($token, $params);
+  $class->gateway->graphql->update_credit_card($token, $params);
 }
 
 sub find {
   my ($class, $token) = @_;
-  $class->gateway->credit_card->find($token);
+  $class->gateway->graphql->find_credit_card($token);
 }
 
 sub from_nonce {
   my ($class, $nonce) = @_;
-  $class->gateway->credit_card->from_nonce($nonce);
+  $class->gateway->graphql->credit_card_from_nonce($nonce);
 }
 
 sub gateway {

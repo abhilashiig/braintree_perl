@@ -8,8 +8,8 @@ has partner_id => (is => 'rw');
 has public_key  => (is => 'rw');
 has private_key => (is => 'rw');
 has gateway => (is  => 'ro', lazy => 1, default => sub { Net::Braintree::Gateway->new({config => shift})});
-has use_graphql => (is => 'rw', default => 1);
-has graphql_version => (is => 'rw', default => '2023-01-01');
+has graphql_version => (is => 'rw', default => '2025-04-28');
+has graphql_timeout => (is => 'rw', default => 60);
 
 has environment => (
   is => 'rw',
@@ -26,37 +26,17 @@ has environment => (
   }
 );
 
-sub base_merchant_path {
-  my $self = shift;
-  return "/merchants/" . $self->merchant_id;
-}
+# GraphQL API methods only - legacy REST API methods removed
 
-sub base_merchant_url {
+sub graphql_server {
   my $self = shift;
-  return $self->base_url() . $self->base_merchant_path;
-}
-
-sub base_url {
-  my $self = shift;
-  return $self->protocol . "://" . $self->server . ':' . $self->port;
-}
-
-sub port {
-  my $self = shift;
-  if($self->environment =~ /integration|development/) {
-    return $ENV{'GATEWAY_PORT'} || "3000"
-  } else {
-    return "443";
-  }
-}
-
-sub server {
-  my $self = shift;
-  return "localhost" if $self->environment eq 'integration';
-  return "localhost" if $self->environment eq 'development';
-  return "api.sandbox.braintreegateway.com" if $self->environment eq 'sandbox';
-  return "api.braintreegateway.com" if $self->environment eq 'production';
-  return "qa-master.braintreegateway.com" if $self->environment eq 'qa';
+  return "payments.sandbox.braintree-api.com" if $self->environment eq 'sandbox';
+  return "payments.braintree-api.com" if $self->environment eq 'production';
+  return "payments.sandbox.braintree-api.com" if $self->environment eq 'development';
+  return "payments.sandbox.braintree-api.com" if $self->environment eq 'integration';
+  return "payments.qa.braintree-api.com" if $self->environment eq 'qa';
+  # Default to sandbox for any other environment
+  return "payments.sandbox.braintree-api.com";
 }
 
 sub graphql_server {
@@ -67,27 +47,21 @@ sub graphql_server {
   return "payments.sandbox.braintree-api.com";
 }
 
+# GraphQL doesn't use the auth_url - method kept for backward compatibility
 sub auth_url {
   my $self = shift;
-  return "http://auth.venmo.dev:9292" if $self->environment eq 'integration';
-  return "http://auth.venmo.dev:9292" if $self->environment eq 'development';
   return "https://auth.sandbox.venmo.com" if $self->environment eq 'sandbox';
   return "https://auth.venmo.com" if $self->environment eq 'production';
-  return "https://auth.qa.venmo.com" if $self->environment eq 'qa';
+  return "https://auth.sandbox.venmo.com";
 }
 
+# GraphQL always uses HTTPS
 sub ssl_enabled {
-  my $self = shift;
-  return ($self->environment !~ /integration|development/);
+  return 1;
 }
 
 sub protocol {
-  my $self = shift;
-  return $self->ssl_enabled ? 'https' : 'http';
-}
-
-sub api_version {
-  return "4";
+  return 'https';
 }
 
 sub graphql_endpoint {
